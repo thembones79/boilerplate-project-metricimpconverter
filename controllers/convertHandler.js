@@ -8,7 +8,7 @@
 
 function ConvertHandler() {
   this.getNum = function(input) {
-    input = input.toLowerCase();
+    // input = input.toLowerCase();
     let numRegex = /\d|\.|\//g;
 
     let numArr = input.match(numRegex);
@@ -47,59 +47,38 @@ function ConvertHandler() {
       let divisor = parseFloat(divisorArr.join(""));
       return dividend / divisor;
     }
-
-    //let result = parseFloat(input.match(numRegex).join(''));
-
-    // let numbers = ["0","1","2","3","4","5","6","7","8","9",".","/"];
-    // let letters = ["a","b","c","d","e","f","g"];
-
-    //  let numString = "Your sandwich will be $5.00";
-
-    //let result2 = numString.match(numRegex);
-
-    //    let noNumRegex = /[a-z]/g;
-    // let result3 = numString.match(noNumRegex);
   };
 
-  /*
-  this.getNum = function (input) {
-
-        // Return early if no value and no unit provided
-        if (!input) {
-            return null
-        }
-
-        let number = input.split(/^([0-9/\.]*)([a-z]*)$/i)[1]
-        let a = input.split(/^([0-9/\.]*)([a-z]*)$/i)[0]
-        let b = input.split(/^([0-9/\.]*)([a-z]*)$/i)[2]
-
-        // Check if division is necessary and assign quotient to number if valid
-        const numParts = number.split('/')
-        if (numParts.length > 1) {
-            if (numParts.length > 2) {
-                return null
-            }
-            number = numParts.reduce((a, v) => a / v)
-        }
-
-        // If no number provided, assume 1 unit
-        if (number === '') {
-            return 1
-        }
-
-        if (Number.isNaN(number) || number === Infinity) {
-            return null
-        }
-console.log(a);
-console.log(b);
-        return +number
-    }
-  */
-
   this.getUnit = function(input) {
-    input = input.toLowerCase();
+    let letterRegex = /[a-z]|[A-Z]/g;
+    let letterArr = input.match(letterRegex);
 
-    var result;
+    // if no unit input return null
+    if (!letterArr) {
+      return null;
+    }
+
+    let result = letterArr.join("");
+    let indexOfSlash = letterArr.indexOf(result);
+
+    // handle unknown units
+    const allowedUnits = [
+      "gal",
+      "l",
+      "mi",
+      "km",
+      "lbs",
+      "kg",
+      "GAL",
+      "L",
+      "MI",
+      "KM",
+      "LBS",
+      "KG"
+    ];
+    if (allowedUnits.indexOf(result) === -1) {
+      return null;
+    }
 
     return result;
   };

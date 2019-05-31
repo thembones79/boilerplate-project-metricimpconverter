@@ -1,131 +1,129 @@
 /*
  *
  *
- *       FILL IN EACH UNIT TEST BELOW COMPLETELY
- *       -----[Keep the tests in the same order!]----
- *       (if additional are added, keep them at the very end!)
+ *       Complete the handler logic below
+ *
+ *
  */
 
-var chai = require("chai");
-var assert = chai.assert;
-var ConvertHandler = require("../controllers/convertHandler.js");
+function ConvertHandler() {
+  this.getNum = function(input) {
+    // input = input.toLowerCase();
+    let numRegex = /\d|\.|\//g;
 
-var convertHandler = new ConvertHandler();
+    let numArr = input.match(numRegex);
 
-suite("Unit Tests", function() {
-  suite("Function convertHandler.getNum(input)", function() {
-    test("Whole number input", function(done) {
-      const input = "32L";
-      assert.equal(convertHandler.getNum(input), 32);
-      done();
-    });
+    // if no numerical input default to 1
+    if (!numArr) {
+      return 1;
+    }
 
-    test("Decimal Input", function(done) {
-      const input = "3.2L";
-      assert.equal(convertHandler.getNum(input), 3.2);
-      done();
-    });
+    let indexOfSlash = numArr.indexOf("/");
 
-    test("Fractional Input", function(done) {
-      const input = "3/2L";
-      assert.equal(convertHandler.getNum(input), 1.5);
-      done();
-    });
+    // handle whole number and decimal inputs
+    if (indexOfSlash === -1) {
+      return parseFloat(numArr.join(""));
 
-    test("Fractional Input w/ Decimal", function(done) {
-      const input = "3.6/2L";
-      assert.equal(convertHandler.getNum(input), 1.8);
-      done();
-    });
+      // handle Invalid Input (number starts with slash)
+    } else if (indexOfSlash === 0) {
+      return null;
+    } else {
+      // handle Invalid Input (double fraction)
+      if (input.split("/").length > 2) {
+        return null;
+      }
 
-    test("Invalid Input (double fraction)", function(done) {
-      const input = "3//2L";
-      assert.isNull(convertHandler.getNum(input));
-      done();
-    });
+      // handle fractional input
+      let dividendArr = [];
+      for (let i = 0; i < indexOfSlash; i++) {
+        dividendArr.push(numArr[i]);
+      }
+      let dividend = parseFloat(dividendArr.join(""));
 
-    test("No Numerical Input", function(done) {
-      const input = "L";
-      assert.equal(convertHandler.getNum(input), 1);
-      done();
-    });
-  });
+      let divisorArr = [];
+      for (let i = indexOfSlash + 1; i < numArr.length; i++) {
+        divisorArr.push(numArr[i]);
+      }
+      let divisor = parseFloat(divisorArr.join(""));
+      return dividend / divisor;
+    }
+  };
 
-  suite("Function convertHandler.getUnit(input)", function() {
-    test("For Each Valid Unit Inputs", function(done) {
-      var input = [
-        "gal",
-        "l",
-        "mi",
-        "km",
-        "lbs",
-        "kg",
-        "GAL",
-        "L",
-        "MI",
-        "KM",
-        "LBS",
-        "KG"
-      ];
-      input.forEach(function(ele) {
-        //assert
-      });
-      done();
-    });
+  this.getUnit = function(input) {
+    let letterRegex = /[a-z]|[A-Z]/g;
+    let letterArr = input.match(letterRegex);
 
-    test("Unknown Unit Input", function(done) {
-      //done();
-    });
-  });
+    // if no unit input return null
+    if (!letterArr) {
+      return null;
+    }
 
-  suite("Function convertHandler.getReturnUnit(initUnit)", function() {
-    test("For Each Valid Unit Inputs", function(done) {
-      var input = ["gal", "l", "mi", "km", "lbs", "kg"];
-      var expect = ["l", "gal", "km", "mi", "kg", "lbs"];
-      input.forEach(function(ele, i) {
-        assert.equal(convertHandler.getReturnUnit(ele), expect[i]);
-      });
-      done();
-    });
-  });
+    let result = letterArr.join("");
+    let indexOfSlash = letterArr.indexOf(result);
 
-  suite("Function convertHandler.spellOutUnit(unit)", function() {
-    test("For Each Valid Unit Inputs", function(done) {
-      //see above example for hint
-      done();
-    });
-  });
+    // handle unknown units
+    const allowedUnits = [
+      "gal",
+      "l",
+      "mi",
+      "km",
+      "lbs",
+      "kg",
+      "GAL",
+      "L",
+      "MI",
+      "KM",
+      "LBS",
+      "KG"
+    ];
+    if (allowedUnits.indexOf(result) === -1) {
+      return null;
+    }
 
-  suite("Function convertHandler.convert(num, unit)", function() {
-    test("Gal to L", function(done) {
-      var input = [5, "gal"];
-      var expected = 18.9271;
-      assert.approximately(
-        convertHandler.convert(input[0], input[1]),
-        expected,
-        0.1
-      ); //0.1 tolerance
-      done();
-    });
+    return result;
+  };
 
-    test("L to Gal", function(done) {
-      //done();
-    });
+  this.getReturnUnit = function(initUnit) {
+    const units = {
+      gal: "l",
+      l: "gal",
+      mi: "km",
+      km: "mi",
+      lbs: "kg",
+      kg: "lbs"
+    };
+    initUnit = initUnit.toLowerCase();
+    return units[initUnit];
+  };
 
-    test("Mi to Km", function(done) {
-      //done();
-    });
+  this.spellOutUnit = function(unit) {
+    return unit;
+  };
 
-    test("Km to Mi", function(done) {
-      //done();
-    });
+  this.convert = function(initNum, initUnit) {
+    const galToL = 3.78541;
+    const lbsToKg = 0.453592;
+    const miToKm = 1.60934;
 
-    test("Lbs to Kg", function(done) {
-      //done();
-    });
+    const converts = {
+      gal: 3.78541,
+      lbs: 0.453592,
+      mi: 1.60934,
+      km: 1 / 1.60934,
+      kg: 1 / 0.453592,
+      l: 1 / 3.78541
+    };
 
-    test("Kg to Lbs", function(done) {
-      //done();
-    });
-  });
-});
+    var result = initNum * converts[initUnit];
+
+    return result;
+  };
+
+  this.getString = function(initNum, initUnit, returnNum, returnUnit) {
+    var result;
+
+    return result;
+  };
+}
+
+module.exports = ConvertHandler;
