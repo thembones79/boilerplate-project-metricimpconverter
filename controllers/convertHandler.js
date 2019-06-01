@@ -84,30 +84,50 @@ function ConvertHandler() {
   };
 
   this.getReturnUnit = function(initUnit) {
-    var result;
-
-    return result;
+    const units = {
+      gal: "l",
+      l: "gal",
+      mi: "km",
+      km: "mi",
+      lbs: "kg",
+      kg: "lbs"
+    };
+    initUnit = initUnit.toLowerCase();
+    return units[initUnit];
   };
 
   this.spellOutUnit = function(unit) {
-    var result;
-
-    return result;
+    const units = {
+      gal: "gallon",
+      l: "liter",
+      mi: "mile",
+      km: "kilometer",
+      lbs: "pound",
+      kg: "kilogram"
+    };
+    unit = unit.toLowerCase();
+    return units[unit];
   };
 
   this.convert = function(initNum, initUnit) {
-    const galToL = 3.78541;
-    const lbsToKg = 0.453592;
-    const miToKm = 1.60934;
-    var result;
+    const converts = {
+      gal: 3.78541,
+      lbs: 0.453592,
+      mi: 1.60934,
+      km: 1 / 1.60934,
+      kg: 1 / 0.453592,
+      l: 1 / 3.78541
+    };
+
+    var result = initNum * converts[initUnit];
 
     return result;
   };
 
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
-    var result;
-
-    return result;
+    return `${initNum} ${this.spellOutUnit(
+      initUnit
+    )}s converts to ${returnNum} ${this.spellOutUnit(returnUnit)}s`;
   };
 }
 
