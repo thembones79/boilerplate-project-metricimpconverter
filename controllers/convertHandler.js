@@ -119,7 +119,7 @@ function ConvertHandler() {
       l: 1 / 3.78541
     };
 
-    var result = initNum * converts[initUnit];
+    var result = initNum * converts[initUnit.toLowerCase()];
 
     return result;
   };
