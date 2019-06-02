@@ -84,6 +84,10 @@ function ConvertHandler() {
   };
 
   this.getReturnUnit = function(initUnit) {
+    if (!initUnit) {
+      return null;
+    }
+
     const units = {
       gal: "l",
       l: "gal",
@@ -97,6 +101,9 @@ function ConvertHandler() {
   };
 
   this.spellOutUnit = function(unit) {
+    if (!unit) {
+      return null;
+    }
     const units = {
       gal: "gallon",
       l: "liter",
@@ -110,6 +117,10 @@ function ConvertHandler() {
   };
 
   this.convert = function(initNum, initUnit) {
+    if (!initUnit) {
+      return null;
+    }
+
     const converts = {
       gal: 3.78541,
       lbs: 0.453592,
@@ -119,15 +130,20 @@ function ConvertHandler() {
       l: 1 / 3.78541
     };
 
-    var result = initNum * converts[initUnit.toLowerCase()];
+    let result = initNum * converts[initUnit.toLowerCase()];
 
     return result;
   };
 
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
+    let initUnitPlural = initNum === 1 ? "" : "s";
+    let returnUnitPlural = returnNum === 1 ? "" : "s";
+
     return `${initNum} ${this.spellOutUnit(
       initUnit
-    )}s converts to ${returnNum} ${this.spellOutUnit(returnUnit)}s`;
+    )}${initUnitPlural} converts to ${returnNum} ${this.spellOutUnit(
+      returnUnit
+    )}${returnUnitPlural}`;
   };
 }
 
